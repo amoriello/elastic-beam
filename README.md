@@ -1,2 +1,4 @@
 elastic-beam
 ============
+
+Personal project
