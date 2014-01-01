@@ -1,0 +1,3 @@
+./configure --host=arm-unknown-linux-gnueabi --build=arm-unknown-linux-gnueabi --prefix=`pwd` && make && make install
+
+
