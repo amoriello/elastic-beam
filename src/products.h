@@ -42,6 +42,6 @@ static const PowerStrip kSisPmFlashNew {
   VendorId{ 0x04b4 },
   ProductId{ 0xfd13 }
 };
-}  // products
+}  // namespace products
 
 #endif  // SRC_PRODUCTS_H_

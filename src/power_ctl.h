@@ -1,8 +1,8 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 
-#ifndef SRC_POWER_CTL_HPP_
-#define SRC_POWER_CTL_HPP_
+#ifndef SRC_POWER_CTL_H_
+#define SRC_POWER_CTL_H_
 
 #include <cstdint>
 
@@ -14,16 +14,15 @@ struct PowerStrip;
 
 
 class PowerCtl {
-
-public:
-  PowerCtl(const PowerStrip& product);
+ public:
+  explicit PowerCtl(const PowerStrip& product);
 
   ~PowerCtl();
 
-public:
+ public:
   bool Init();
 
-public:
+ public:
   void TurnOn(uint8_t outlet);
   void TurnOff(uint8_t outlet);
 
@@ -34,7 +33,7 @@ public:
   void PrintSerial() const;
 
 
-private:
+ private:
   struct UsbMessage {
     uint8_t   request_type = 0;
     uint8_t   request = 0;
@@ -45,7 +44,6 @@ private:
     uint32_t  timeout = 500;
   };
 
-private:
   enum OutletState {
     kOff = 0x00,
     kOn = 0x03
@@ -55,16 +53,15 @@ private:
   bool SetOutletState(uint8_t outlet, OutletState action);
   bool GetOutletState(uint8_t outlet) const;
 
-
   int EnumDevices() const;
   void PrintDevice(libusb_device* p_device) const;
 
   int UsbSendCommand(UsbMessage* p_message) const;
 
-private:
+ private:
   const PowerStrip& product_;
   libusb_context* p_ctx_ = nullptr;
   libusb_device_handle* p_hdev_ = nullptr;
 };
 
-#endif  // SRC_POWER_CTL_HPP_
+#endif  // SRC_POWER_CTL_H_

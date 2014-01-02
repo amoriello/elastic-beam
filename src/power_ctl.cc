@@ -104,7 +104,7 @@ bool  PowerCtl::Init() {
     fprintf(stderr, "[!] Cannot set usb configuration for device\n",
                     ::libusb_error_name(ret));
     return false;
-  };
+  }
 
   if ((ret = ::libusb_claim_interface(p_hdev, 0)) != 0) {
     fprintf(stderr, "[!] Cannot claim interface for device: %s\n",
