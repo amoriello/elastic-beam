@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
+
 #include "power_ctl.h"
-#include "scope_exit.h"
 #include "products.h"
 
 
