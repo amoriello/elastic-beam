@@ -2,18 +2,19 @@
 
 #include "power_ctl.h"
 
-#include "scope_exit.h"
-
 #include <stdio.h>
 #include <libusb.h>
 
+#include "products.h"
+#include "scope_exit.h"
 
 
+//-----------------------------------------------------------------------------
 PowerCtl::PowerCtl(const PowerStrip& product)
   : product_(product) { }
 
 
-
+//-----------------------------------------------------------------------------
 PowerCtl::~PowerCtl() {
   if (p_hdev_) {
     ::libusb_close(p_hdev_);
@@ -25,38 +26,54 @@ PowerCtl::~PowerCtl() {
 }
 
 
+//-----------------------------------------------------------------------------
 void PowerCtl::TurnOn(uint8_t outlet) {
   SetOutletState(outlet, kOn);
 }
 
 
-
+//-----------------------------------------------------------------------------
 void PowerCtl::TurnOff(uint8_t outlet) {
   SetOutletState(outlet, kOff);
 }
 
 
+//-----------------------------------------------------------------------------
+bool PowerCtl::IsOn(uint8_t outlet) const {
+  return GetOutletState(outlet);
+}
 
 
+//-----------------------------------------------------------------------------
+bool PowerCtl::IsOff(uint8_t outlet) const {
+  return !IsOn(outlet);
+}
 
+
+//-----------------------------------------------------------------------------
+void PowerCtl::Toogle(uint8_t outlet) {
+  if (IsOn(outlet)) {
+    TurnOff(outlet);
+  } else {
+    TurnOn(outlet);
+  }
+}
+
+//-----------------------------------------------------------------------------
 bool  PowerCtl::Init() {
   libusb_device_handle* p_hdev = nullptr;
   libusb_context* p_ctx = nullptr;
   int ret = 0;
 
   OnScopeExit cleanup([&]() {
-      if (p_hdev) {
-        ::libusb_close(p_hdev);
-      }
-
-      if (p_ctx) {
-        ::libusb_exit(p_ctx);
-      }
+      if (p_hdev) { ::libusb_close(p_hdev); }
+      if (p_ctx) { ::libusb_exit(p_ctx); }
     });
 
 
   if ((ret = ::libusb_init(&p_ctx)) != 0) {
-    fprintf(stderr, "[!] Cannot initialize usb context: %s\n", ::libusb_error_name(ret));
+    fprintf(stderr, "[!] Cannot initialize usb context: %s\n",
+                    ::libusb_error_name(ret));
     return !!ret;
   }
 
@@ -84,17 +101,20 @@ bool  PowerCtl::Init() {
 
 
   if ((ret = ::libusb_set_configuration(p_hdev, 1)) != 0) {
-    fprintf(stderr, "[!] Cannot set usb configuration for device\n", ::libusb_error_name(ret));
+    fprintf(stderr, "[!] Cannot set usb configuration for device\n",
+                    ::libusb_error_name(ret));
     return false;
   };
 
   if ((ret = ::libusb_claim_interface(p_hdev, 0)) != 0) {
-    fprintf(stderr, "[!] Cannot claim interface for device: %s\n", ::libusb_error_name(ret));
+    fprintf(stderr, "[!] Cannot claim interface for device: %s\n",
+                    ::libusb_error_name(ret));
     return false;
   }
 
   if ((ret = ::libusb_set_interface_alt_setting(p_hdev, 0, 0)) != 0) {
-    fprintf(stderr, "[!] Cannot set alternate interface for device: %s\n", ::libusb_error_name(ret));
+    fprintf(stderr, "[!] Cannot set alternate interface for device: %s\n",
+                    ::libusb_error_name(ret));
     return false;
   }
 
@@ -108,7 +128,8 @@ bool  PowerCtl::Init() {
 }
 
 
-int PowerCtl::EnumDevices() {
+//-----------------------------------------------------------------------------
+int PowerCtl::EnumDevices() const {
   libusb_device** devices = nullptr;
   auto device_count = ::libusb_get_device_list(p_ctx_, &devices);
 
@@ -126,21 +147,24 @@ int PowerCtl::EnumDevices() {
 }
 
 
+//-----------------------------------------------------------------------------
 void PowerCtl::PrintSerial() const {
-  int req_type = 0xa1;
-  int req = 0x01;
   uint8_t buffer[5] = {0, 0, 0, 0, 0};
+  UsbMessage message;
 
+  message.request_type = LIBUSB_REQUEST_TYPE_CLASS |
+                         LIBUSB_RECIPIENT_INTERFACE |
+                         LIBUSB_ENDPOINT_IN;  // 0xa1
+  message.request = 0x01;
+  message.value = (0x03 << 8) | 0x01;
+  message.index = 0;
+  message.data = buffer;
+  message.data_size = sizeof(buffer);
 
-  if (auto ret = (::libusb_control_transfer(p_hdev_,
-                                req_type,
-                                req,
-                                (0x03 << 8) | 1,
-                                0,
-                                buffer,
-                                5,
-                                5000) < 2)) {
-    fprintf(stderr,"[!] Libusb error string: %s\nTerminating\n", ::libusb_error_name(ret));
+  int ret = 0;
+  if ((ret = UsbSendCommand(&message)) < 0) {
+    fprintf(stderr, "[!] Libusb error string: %s\nTerminating\n",
+                    ::libusb_error_name(ret));
   }
 
   fprintf(stdout, "Product Serial : %02x:%02x:%02x:%02x:%02x\n",
@@ -152,33 +176,70 @@ void PowerCtl::PrintSerial() const {
 }
 
 
-
-bool PowerCtl::SetOutletState(uint8_t outlet, OutletAction action) {
-  int req_type = 0x21;
-  int req = 0x09;
+//-----------------------------------------------------------------------------
+bool PowerCtl::SetOutletState(uint8_t outlet, OutletState action) {
   uint8_t hw_outlet = 3 * outlet;
+  uint8_t buffer[2] = { hw_outlet, action };
+  UsbMessage message;
 
-  uint8_t buffer[2] = {hw_outlet, action};
-  auto res = ::libusb_control_transfer(p_hdev_,
-                                       req_type,
-                                       req,
-                                       (0x03 << 8) | hw_outlet,
-                                       0,
-                                       buffer,
-                                       2,
-                                       500);
-  printf("%i\n", res);
+  message.request_type = LIBUSB_REQUEST_TYPE_CLASS |
+                         LIBUSB_RECIPIENT_INTERFACE |
+                         LIBUSB_ENDPOINT_OUT;  // 0x21
+
+  message.request = LIBUSB_REQUEST_SET_CONFIGURATION;
+  message.value = (0x03 << 8) | hw_outlet;
+  message.index = 0;
+  message.data = buffer;
+  message.data_size = sizeof(buffer);
+
+  auto res = UsbSendCommand(&message);
   return !!res;
 }
 
 
-bool PowerCtl::UsbSendCommand(uint8_t outlet, uint8_t request_type, uint8_t request) {
+//-----------------------------------------------------------------------------
+bool PowerCtl::GetOutletState(uint8_t outlet) const {
   uint8_t hw_outlet = 3 * outlet;
+  uint8_t buffer[2] = { hw_outlet, 0x03 };
+  UsbMessage message;
 
+  printf("[Reading state:] 0x03 sent\n");
+
+  message.request_type = LIBUSB_REQUEST_TYPE_CLASS |
+                         LIBUSB_RECIPIENT_INTERFACE |
+                         LIBUSB_ENDPOINT_IN;  // 0xa1
+
+  message.request = 0x01;
+  message.value = (0x03 << 8) | hw_outlet;
+  message.index = 0;
+  message.data = buffer;
+  message.data_size = sizeof(buffer);
+
+  UsbSendCommand(&message);
+
+  printf("[Reading state:] 0x%02x recevied\n", buffer[1]);
+
+  return buffer[1] & 1;
 }
 
 
-void PowerCtl::PrintDevice(libusb_device* p_dev) {
+//-----------------------------------------------------------------------------
+int PowerCtl::UsbSendCommand(UsbMessage* p_message) const {
+  int res = ::libusb_control_transfer(p_hdev_,
+                                      p_message->request_type,
+                                      p_message->request,
+                                      p_message->value,
+                                      p_message->index,
+                                      p_message->data,
+                                      p_message->data_size,
+                                      p_message->timeout);
+
+  return res;
+}
+
+
+//-----------------------------------------------------------------------------
+void PowerCtl::PrintDevice(libusb_device* p_dev) const {
   libusb_device_descriptor desc;
 
   int r = ::libusb_get_device_descriptor(p_dev, &desc);
@@ -187,7 +248,8 @@ void PowerCtl::PrintDevice(libusb_device* p_dev) {
   }
 
   fprintf(stdout, "=====================\n");
-  fprintf(stdout, "Nb of possible configurations: %i\n", desc.bNumConfigurations);
+  fprintf(stdout, "Nb of possible configurations: %i\n",
+                  desc.bNumConfigurations);
   fprintf(stdout, "Device Class: %i\n", desc.bDeviceClass);
   fprintf(stdout, "VendorID: %04x\n", desc.idVendor);
   fprintf(stdout, "ProductID: %04x\n", desc.idProduct);

@@ -5,6 +5,7 @@
 #include "products.h"
 
 
+
 int main() {
   PowerCtl power_ctl(products::kSisPmFlashNew);
 
@@ -12,7 +13,7 @@ int main() {
     return 1;
   }
 
-  power_ctl.TurnOn(1);
+  power_ctl.Toogle(1);
 
   return 0;
 }
