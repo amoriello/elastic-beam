@@ -10,7 +10,7 @@ class OnScopeExit {
   typedef std::function<void()> Handler;
 
 public:
-  explicit OnScopeExit(Handler handler)
+  explicit OnScopeExit(Handler&& handler)
     : handler_(handler) { }
 
   ~OnScopeExit() {
