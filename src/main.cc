@@ -1,10 +1,12 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 #include "power_ctl.h"
+#include "scope_exit.h"
+#include "products.h"
 
 
 int main() {
-  aqua::PowerCtl power_ctl(aqua::products::kSisPmFlashNew);
+  PowerCtl power_ctl(products::kSisPmFlashNew);
 
   if (!power_ctl.Init()) {
     return 1;

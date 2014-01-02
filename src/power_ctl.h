@@ -1,79 +1,14 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 
-#ifndef POWER_CTL_HPP_
-#define POWER_CTL_HPP_
+#ifndef SRC_POWER_CTL_HPP_
+#define SRC_POWER_CTL_HPP_
 
+#include "products.h"
 
-#include <cstdint>
-#include <functional>
-
-
-class libusb_context;
-class libusb_device;
-class libusb_device_handle;
-
-
-
-namespace aqua {
-
-struct VendorId {
-  uint16_t value;
-};
-
-struct ProductId {
-  uint16_t value;
-};
-
-
-struct PowerStrip {
-  VendorId vendor_id;
-  ProductId product_id;
-};
-
-namespace products {
-
-
-static PowerStrip kSisPm {
-  VendorId { 0x04b4 },
-  ProductId { 0xfd11 }
-};
-
-
-static PowerStrip kMSisPmOld {
-  VendorId { 0x04b4 },
-  ProductId { 0xfd11 }
-};
-
-static PowerStrip kMSisPmFlash {
-  VendorId { 0x04b4 },
-  ProductId { 0xfd11 }
-};
-
-static const PowerStrip kSisPmFlashNew {
-  VendorId { 0x04b4 },
-  ProductId { 0xfd13 }
-};
-
-}  // products
-
-
-
-class OnScopeExit {
-  typedef std::function<void ()> Handler;
-
-public:
-  explicit OnScopeExit(Handler handler)
-  : handler_(handler) { }
-
-  ~OnScopeExit() {
-    handler_();
-  }
-
-private:
-  Handler handler_;
-};
-
+struct libusb_context;
+struct libusb_device;
+struct libusb_device_handle;
 
 class PowerCtl {
 
@@ -103,6 +38,7 @@ private:
 
   bool SetOutletState(uint8_t outlet, OutletAction action);
 
+  bool UsbSendCommand(uint8_t outlet, uint8_t request_type, uint8_t request);
 
 private:
   const PowerStrip& product_;
@@ -110,7 +46,4 @@ private:
   libusb_device_handle* p_hdev_ = nullptr;
 };
 
-}  // aqua
-
-
-#endif  // POWER_CTL_HPP_
+#endif  // SRC_POWER_CTL_HPP_

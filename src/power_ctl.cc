@@ -2,12 +2,11 @@
 
 #include "power_ctl.h"
 
+#include "scope_exit.h"
+
 #include <stdio.h>
-#include <unistd.h>
 #include <libusb.h>
 
-
-namespace aqua {
 
 
 PowerCtl::PowerCtl(const PowerStrip& product)
@@ -130,7 +129,7 @@ int PowerCtl::EnumDevices() {
 void PowerCtl::PrintSerial() const {
   int req_type = 0xa1;
   int req = 0x01;
-  uint8_t buffer[6] = { 0, 0, 0, 0, 0};
+  uint8_t buffer[5] = {0, 0, 0, 0, 0};
 
 
   if (auto ret = (::libusb_control_transfer(p_hdev_,
@@ -149,8 +148,7 @@ void PowerCtl::PrintSerial() const {
           buffer[1],
           buffer[2],
           buffer[3],
-          buffer[4],
-          buffer[5]);
+          buffer[4]);
 }
 
 
@@ -160,7 +158,7 @@ bool PowerCtl::SetOutletState(uint8_t outlet, OutletAction action) {
   int req = 0x09;
   uint8_t hw_outlet = 3 * outlet;
 
-  uint8_t buffer[5] = {hw_outlet, action};
+  uint8_t buffer[2] = {hw_outlet, action};
   auto res = ::libusb_control_transfer(p_hdev_,
                                        req_type,
                                        req,
@@ -170,7 +168,13 @@ bool PowerCtl::SetOutletState(uint8_t outlet, OutletAction action) {
                                        2,
                                        500);
   printf("%i\n", res);
-  return res;
+  return !!res;
+}
+
+
+bool PowerCtl::UsbSendCommand(uint8_t outlet, uint8_t request_type, uint8_t request) {
+  uint8_t hw_outlet = 3 * outlet;
+
 }
 
 
@@ -188,4 +192,3 @@ void PowerCtl::PrintDevice(libusb_device* p_dev) {
   fprintf(stdout, "VendorID: %04x\n", desc.idVendor);
   fprintf(stdout, "ProductID: %04x\n", desc.idProduct);
 }
-}  // aqua
