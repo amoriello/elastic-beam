@@ -1,8 +1,8 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 
-#ifndef SRC_SCOPE_EXIT_H_
-#define SRC_SCOPE_EXIT_H_
+#ifndef SRC_POWER_CONTROLLER_SCOPE_EXIT_H_
+#define SRC_POWER_CONTROLLER_SCOPE_EXIT_H_
 
 #include <functional>
 
@@ -21,4 +21,4 @@ class OnScopeExit {
   Handler handler_;
 };
 
-#endif  // SRC_SCOPE_EXIT_H_
+#endif  // SRC_POWER_CONTROLLER_SCOPE_EXIT_H_

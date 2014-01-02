@@ -1,8 +1,8 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 
-#ifndef SRC_PRODUCTS_H_
-#define SRC_PRODUCTS_H_
+#ifndef SRC_POWER_CONTROLLER_PRODUCTS_H_
+#define SRC_POWER_CONTROLLER_PRODUCTS_H_
 
 #include <cstdint>
 
@@ -44,4 +44,4 @@ static const PowerStrip kSisPmFlashNew {
 };
 }  // namespace products
 
-#endif  // SRC_PRODUCTS_H_
+#endif  // SRC_POWER_CONTROLLER_PRODUCTS_H_

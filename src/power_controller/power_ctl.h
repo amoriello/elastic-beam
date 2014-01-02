@@ -1,8 +1,8 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License.
 
 
-#ifndef SRC_POWER_CTL_H_
-#define SRC_POWER_CTL_H_
+#ifndef SRC_POWER_CONTROLLER_POWER_CTL_H_
+#define SRC_POWER_CONTROLLER_POWER_CTL_H_
 
 #include <cstdint>
 
@@ -64,4 +64,4 @@ class PowerCtl {
   libusb_device_handle* p_hdev_ = nullptr;
 };
 
-#endif  // SRC_POWER_CTL_H_
+#endif  // SRC_POWER_CONTROLLER_POWER_CTL_H_

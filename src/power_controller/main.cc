@@ -1,6 +1,6 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
-#include "power_ctl.h"
-#include "products.h"
+#include "power_controller/power_ctl.h"
+#include "power_controller/products.h"
 
 
 int main() {
