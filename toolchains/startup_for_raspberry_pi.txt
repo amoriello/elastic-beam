@@ -7,6 +7,7 @@ Source : http://www.bootc.net/archives/2012/05/26/how-to-build-a-cross-compiler-
 (Thx!)
 
 1 : Download crosstool-ng from the project web site. I’ve used version 1.15.2 as that was the latest when I wrote this.
+1.1 : sudo apt-get install build-essential gperf bison flex texinfo gawk libtool automake libncurses5-dev subversion
 2 / Unpack the tarball and cd into the unpacked directory, then run ./configure --prefix=/opt/cross. You can pick somewhere else instead of /opt/cross but that’s where I like to keep it.
 3 : Run make and sudo make install.
 4 : Make sure /opt/cross/bin is in your $PATH.
@@ -23,10 +24,11 @@ Source : http://www.bootc.net/archives/2012/05/26/how-to-build-a-cross-compiler-
 9 : Go back to the main menu and select Binary utilities.
 10 : Change binutils version to 2.21.1a or whichever is the latest that isn’t marked as experimental. Probably unnecessary but I prefer this.
 11 : Go back to the main menu and select C compiler.
-12 : Enable the Show Linaro versions (EXPERIMENTAL) option.
+12 : Enable the Show Linaro versions option.
 13 : In the gcc version field, choose the linaro-4.6-2012.04 (EXPERIMENTAL) compiler. You’re free to choose a different one but I know this one works well. I do recommend the Linaro versions over the vanilla ones for the RPi.
+13.1 : Activate C++
 14 : All the other settings are fine left at their default values. Exit the configuration tool and save your changes.
-15 : Run ct-ng build.
+15 : Run ct-ng build (<- permission issues... chwon -R my_user:my_user /opt/cross).
 16 : Go away and make a coffee, etc… This bit will take some time.
 17 : You should end up with a freshly baked arm compiler ready for building kernels (and other things) for your Raspberry Pi in your Prefix directory you chose above.
 18 : Just add your compiler directory to your $PATH and start compiling. If you used my preferred prefix directory, you would want to add /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin.
@@ -38,7 +40,7 @@ Step2 : Download and build the libusb last version :
 Download libusb 1.0.9 http://www.libusb.org/
 extract source code in the_project_dir/src/third_party/libusb/
 cd the_project_dir/src/third_party/libusb/
-./configure --host=arm-unknown-linux-gnueabi --build=arm-unknown-linux-gnueabi --prefix=`pwd` && make && make install
+./configure --host=arm-unknown-linux-gnueabi --prefix=`pwd` && make && make install
 
 
 
