@@ -51,7 +51,7 @@ bool PowerCtl::IsOff(uint8_t outlet) const {
 
 
 //-----------------------------------------------------------------------------
-void PowerCtl::Toogle(uint8_t outlet) {
+void PowerCtl::Toggle(uint8_t outlet) {
   if (IsOn(outlet)) {
     TurnOff(outlet);
   } else {

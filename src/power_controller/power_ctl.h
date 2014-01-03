@@ -29,7 +29,7 @@ class PowerCtl {
   bool IsOn(uint8_t outlet) const;
   bool IsOff(uint8_t outlet) const;
 
-  void Toogle(uint8_t outlet);
+  void Toggle(uint8_t outlet);
   void PrintSerial() const;
 
 
