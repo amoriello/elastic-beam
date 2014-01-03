@@ -38,7 +38,7 @@ Source : http://www.bootc.net/archives/2012/05/26/how-to-build-a-cross-compiler-
 Step2 : Download and build the libusb last version :
 ----------------------------------------------------
 Download libusb 1.0.9 http://www.libusb.org/
-extract source code in the_project_dir/src/third_party/libusb/
+extract source code in the_project_dir/src/power_controller/third_party/libusb/
 cd the_project_dir/src/third_party/libusb/
 ./configure --host=arm-unknown-linux-gnueabi --prefix=`pwd` && make && make install
 
