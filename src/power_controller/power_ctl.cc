@@ -8,7 +8,6 @@
 #include "products.h"
 #include "scope_exit.h"
 
-
 //-----------------------------------------------------------------------------
 PowerCtl::PowerCtl(const PowerStrip& product)
   : product_(product) { }
@@ -80,8 +79,8 @@ bool  PowerCtl::Init() {
   ::libusb_set_debug(p_ctx, 3);
 
   p_hdev = ::libusb_open_device_with_vid_pid(p_ctx,
-                                             product_.vendor_id.value,
-                                             product_.product_id.value);
+                                             product_.vendor_id,
+                                             product_.product_id);
 
   if (!p_hdev) {
     fprintf(stderr, "[!] Cannot open device\n");
