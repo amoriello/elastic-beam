@@ -4,6 +4,15 @@ project(power_controller)
 # Local project third_party directory
 set(THIS_THIRD_PARTY_DIR "${PROJECT_SOURCE_DIR}/third_party")
 
+# Boost related search
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+
+find_package(Boost 1.55.0 REQUIRED COMPONENTS program_options)
+
+
+
 # Libusb Related search
 if (UNIX)
 	message("Configuring for Linux")
@@ -27,19 +36,21 @@ find_library(LIBUSB_1_LIBRARY
 )
 
 
-include_directories(${LIBUSB_1_INCLUDE_DIRS})
+include_directories(${LIBUSB_1_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 set(SOURCE_FILES
   main.cc
   power_ctl.cc
   power_ctl.h
+  program_options.cc
+  program_options.h
   products.h
   scope_exit.h)
 
 add_executable(power_controller ${SOURCE_FILES})
 
 if (UNIX)
-  target_link_libraries(power_controller ${LIBUSB_1_LIBRARY})
+  target_link_libraries(power_controller ${LIBUSB_1_LIBRARY} ${Boost_LIBRARIES})
 endif (UNIX)
 
 if (MSVC)
