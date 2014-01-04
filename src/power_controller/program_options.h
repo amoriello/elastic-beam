@@ -1,3 +1,5 @@
+// Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
+
 #ifndef SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_
 #define SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_
 
@@ -12,7 +14,7 @@ class ProgramOptions {
   // (that uses stream operator >> for conversion) to parse input
   // as an int, not as a char.
   //
-  // Keeping this as private as possible
+  // Keeping this as private and hidden as possible
   struct NumByte {
     uint8_t value;
     NumByte() : value() {}
@@ -27,11 +29,6 @@ class ProgramOptions {
       // Safe
       valArg.value = static_cast<uint8_t>(i);
       return in;
-    }
-
-    friend std::ostream& operator<<(std::ostream& out, NumByte& valArg) {
-      out << static_cast<int>(valArg.value);
-      return out;
     }
   };
   ///

@@ -1,3 +1,5 @@
+// Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
+
 #include "power_controller/program_options.h"
 
 #include <boost/program_options.hpp>

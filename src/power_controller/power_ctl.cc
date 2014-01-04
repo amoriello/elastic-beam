@@ -58,6 +58,7 @@ void PowerCtl::Toggle(uint8_t outlet) {
   }
 }
 
+
 //-----------------------------------------------------------------------------
 bool  PowerCtl::Init() {
   libusb_device_handle* p_hdev = nullptr;
@@ -202,8 +203,6 @@ bool PowerCtl::GetOutletState(uint8_t outlet) const {
   uint8_t buffer[2] = { hw_outlet, 0x03 };
   UsbMessage message;
 
-  printf("[Reading state:] 0x03 sent\n");
-
   message.request_type = LIBUSB_REQUEST_TYPE_CLASS |
                          LIBUSB_RECIPIENT_INTERFACE |
                          LIBUSB_ENDPOINT_IN;  // 0xa1
@@ -215,8 +214,6 @@ bool PowerCtl::GetOutletState(uint8_t outlet) const {
   message.data_size = sizeof(buffer);
 
   UsbSendCommand(&message);
-
-  printf("[Reading state:] 0x%02x recevied\n", buffer[1]);
 
   return buffer[1] & 1;
 }
