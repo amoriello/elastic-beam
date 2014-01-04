@@ -21,22 +21,19 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  const auto& outlets_to_power_on = options.GetPowerOnList();
-  for (uint8_t outlet : outlets_to_power_on) {
+  for (uint8_t outlet : options.GetPowerOnList()) {
     if (power_strip.IsValidOutlet(outlet)) {
       power_ctl.TurnOn(outlet);
     }
   }
 
-  const auto& outlets_to_power_off = options.GetPowerOffList();
-  for (uint8_t outlet : outlets_to_power_off) {
+  for (uint8_t outlet : options.GetPowerOffList()) {
     if (power_strip.IsValidOutlet(outlet)) {
       power_ctl.TurnOff(outlet);
     }
   }
 
-  const auto& outlets_to_toogle = options.GetToggleList();
-  for (uint8_t outlet : outlets_to_toogle) {
+  for (uint8_t outlet : options.GetToggleList()) {
     if (power_strip.IsValidOutlet(outlet)) {
       power_ctl.Toggle(outlet);
     }

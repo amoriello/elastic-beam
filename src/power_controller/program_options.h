@@ -7,6 +7,12 @@
 
 class ProgramOptions {
   // What a mess to read uint8_t as byte!!
+  //
+  // I need to use this instead of outlet_list to allow program_options
+  // (that uses stream operator >> for conversion) to parse input
+  // as an int, not as a char.
+  //
+  // Keeping this as private as possible
   struct NumByte {
     uint8_t value;
     NumByte() : value() {}
@@ -16,6 +22,7 @@ class ProgramOptions {
 
     friend std::istream& operator>>(std::istream& in, NumByte& valArg) {
       int i;
+      // Do what it is expected to do
       in >> i;
       // Safe
       valArg.value = static_cast<uint8_t>(i);
@@ -27,7 +34,7 @@ class ProgramOptions {
       return out;
     }
   };
-
+  ///
   typedef std::vector<NumByte> outlet_list;
 
  public:
