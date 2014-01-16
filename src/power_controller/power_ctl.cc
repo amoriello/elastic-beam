@@ -101,7 +101,7 @@ bool  PowerCtl::Init() {
 
 
   if ((ret = ::libusb_set_configuration(p_hdev, 1)) != 0) {
-    fprintf(stderr, "[!] Cannot set usb configuration for device\n",
+    fprintf(stderr, "[!] Cannot set usb configuration for device %s\n",
                     ::libusb_error_name(ret));
     return false;
   }
