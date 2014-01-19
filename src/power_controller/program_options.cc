@@ -13,7 +13,7 @@ ProgramOptions::ProgramOptions(int argc, char** argv) {
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
-};
+}
 
 
 void ProgramOptions::Parse(int argc, char** argv) {
@@ -21,15 +21,13 @@ void ProgramOptions::Parse(int argc, char** argv) {
   po::options_description generic("Generic options");
   generic.add_options()
     ("version,v", "print version string")
-    ("help,h", "produce help message")
-    ;
+    ("help,h", "produce help message");
 
   po::options_description power_options("Power options");
   power_options.add_options()
-    ("activate,a", po::value<outlet_list>(), "power on specified outlet list")
-    ("desactivate,d", po::value<outlet_list>(), "power off specified outlet list")
-    ("toggle,t", po::value<outlet_list>(), "toggle specified outlet list")
-    ;
+  ("activate,a", po::value<outlet_list>(), "power on specified outlet list")
+  ("desactivate,d", po::value<outlet_list>(), "power off specified outlet list")
+  ("toggle,t", po::value<outlet_list>(), "toggle specified outlet list");
 
   po::options_description cmd_line_opts("Allowed options");
   cmd_line_opts.add(generic).add(power_options);

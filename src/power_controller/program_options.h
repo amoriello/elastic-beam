@@ -1,11 +1,11 @@
 // Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
 
-#ifndef SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_
-#define SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_
+#ifndef SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_H_
+#define SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_H_
 
 #include <vector>
 #include <cstdint>
-#include <iostream>
+#include <iostream>  // NOLINT
 
 class ProgramOptions {
   // What a mess to read uint8_t as byte!!
@@ -14,12 +14,12 @@ class ProgramOptions {
   // (that uses stream operator >> for conversion) to parse input
   // as an int, not as a char.
   //
-  // Keeping this as private and hidden as possible
+  // Keeping this as private, hidden and implicit as possible
   struct NumByte {
     uint8_t value;
     NumByte() : value() {}
-    NumByte(const uint8_t &arg) : value(arg) {}
-    NumByte(const NumByte &arg) : value(arg.value) {}
+    NumByte(const uint8_t &arg) : value(arg) {}  // NOLINT
+    NumByte(const NumByte &arg) : value(arg.value) {}  // NOLINT
     operator uint8_t() const { return value; }
 
     friend std::istream& operator>>(std::istream& in, NumByte& valArg) {
@@ -60,4 +60,4 @@ class ProgramOptions {
 };
 
 
-#endif  // SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_#endif
+#endif  // SRC_POWER_CONTROLLER_PROGRAM_OPTIONS_H_

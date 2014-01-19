@@ -4,8 +4,6 @@
 #include "power_controller/products.h"
 #include "power_controller/program_options.h"
 
-#include <iostream>
-
 
 int main(int argc, char** argv) {
   ProgramOptions options(argc, argv);

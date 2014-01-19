@@ -1,8 +1,11 @@
-#ifndef SRC_POWER_CONTROLLER_NODE_SRC_
-#define SRC_POWER_CONTROLLER_NODE_SRC_
+// Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
+
+#ifndef SRC_POWER_CONTROLLER_NODE_POWER_CTL_H_
+#define SRC_POWER_CONTROLLER_NODE_POWER_CTL_H_
 
 #include <string>
-#include <node.h>
+
+#include <node.h>  // NOLINT
 
 #include "power_controller/products.h"
 #include "power_controller/power_ctl.h"
@@ -12,7 +15,7 @@ class NodePowerCtl : public node::ObjectWrap {
  public:
   static void Init(v8::Handle<v8::Object> exports);
 
-private:
+ private:
   static v8::Handle<v8::Value> New(const v8::Arguments& args);
 
  private:
@@ -47,5 +50,5 @@ private:
 };
 
 
-#endif  // SRC_POWER_CONTROLLER_NODE_SRC_
+#endif  // SRC_POWER_CONTROLLER_NODE_POWER_CTL_H_
 

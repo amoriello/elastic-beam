@@ -1,9 +1,9 @@
+// Copyright (c) 2006-2008 The Elastic-Beam Authors. Beerware License".
+
 #include <node.h>
 #include "power_controller/node_power_ctl.h"
 
-using namespace v8;
-
-Persistent<Function> NodePowerCtl::constructor;
+v8::Persistent<v8::Function> NodePowerCtl::constructor;
 
 NodePowerCtl::NodePowerCtl()
   : power_strip_(products::kSisPmFlashNew),
@@ -16,8 +16,8 @@ NodePowerCtl::~NodePowerCtl() {
 }
 
 
-bool NodePowerCtl::InputIsValid(const Arguments& args,
-                                       std::string* p_err_msg) const {
+bool NodePowerCtl::InputIsValid(const v8::Arguments& args,
+                                std::string* p_err_msg) const {
   if (args.Length() != 1) {
     *p_err_msg = "Wrong number of arguments";
     return false;
@@ -42,35 +42,35 @@ bool NodePowerCtl::InputIsValid(const Arguments& args,
 }
 
 
-void NodePowerCtl::Init(Handle<Object> exports) {
+void NodePowerCtl::Init(v8::Handle<v8::Object> exports) {
   // Prepare constructor template
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
-  tpl->SetClassName(String::NewSymbol("PowerCtl"));
+  v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(New);
+  tpl->SetClassName(v8::String::NewSymbol("PowerCtl"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("turnOn"),
-      FunctionTemplate::New(TurnOn)->GetFunction());
+  tpl->PrototypeTemplate()->Set(v8::String::NewSymbol("turnOn"),
+      v8::FunctionTemplate::New(TurnOn)->GetFunction());
 
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("turnOff"),
-      FunctionTemplate::New(TurnOff)->GetFunction());
+  tpl->PrototypeTemplate()->Set(v8::String::NewSymbol("turnOff"),
+      v8::FunctionTemplate::New(TurnOff)->GetFunction());
 
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("toggle"),
-      FunctionTemplate::New(Toggle)->GetFunction());
+  tpl->PrototypeTemplate()->Set(v8::String::NewSymbol("toggle"),
+      v8::FunctionTemplate::New(Toggle)->GetFunction());
 
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("isOn"),
-      FunctionTemplate::New(IsOn)->GetFunction());
+  tpl->PrototypeTemplate()->Set(v8::String::NewSymbol("isOn"),
+      v8::FunctionTemplate::New(IsOn)->GetFunction());
 
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("isOff"),
-      FunctionTemplate::New(IsOff)->GetFunction());
+  tpl->PrototypeTemplate()->Set(v8::String::NewSymbol("isOff"),
+      v8::FunctionTemplate::New(IsOff)->GetFunction());
 
-  constructor = Persistent<Function>::New(tpl->GetFunction());
+  constructor = v8::Persistent<v8::Function>::New(tpl->GetFunction());
 
-  exports->Set(String::NewSymbol("PowerCtl"), constructor);
+  exports->Set(v8::String::NewSymbol("PowerCtl"), constructor);
 }
 
 
-Handle<Value> NodePowerCtl::New(const Arguments& args) {
-  HandleScope scope;
+v8::Handle<v8::Value> NodePowerCtl::New(const v8::Arguments& args) {
+  v8::HandleScope scope;
 
   if (args.IsConstructCall()) {
     // Invoked as constructor: `new PowerCtl(...)`
@@ -85,25 +85,25 @@ Handle<Value> NodePowerCtl::New(const Arguments& args) {
 
 
 template <typename PwrAction>
-Handle<Value> NodePowerCtl::ForwardCall(const Arguments& args,
+v8::Handle<v8::Value> NodePowerCtl::ForwardCall(const v8::Arguments& args,
                                                PwrAction action) {
   auto p_pwr_ctl = ObjectWrap::Unwrap<NodePowerCtl>(args.This());
 
   std::string err_msg;
   if (!p_pwr_ctl->InputIsValid(args, &err_msg)) {
     ThrowInputError(err_msg);
-    return Undefined();
+    return v8::Undefined();
   }
 
   int value = args[0]->NumberValue();
   int result = action(&(p_pwr_ctl->power_ctl_), value);
 
-  return Number::New(result);
+  return v8::Number::New(result);
 }
 
 
 
-Handle<Value> NodePowerCtl::TurnOn(const Arguments& args) {
+v8::Handle<v8::Value> NodePowerCtl::TurnOn(const v8::Arguments& args) {
   auto action = [](PowerCtl* p_pwr_ctl, int outlet) {
     p_pwr_ctl->TurnOn(outlet);
     return 0;
@@ -113,7 +113,7 @@ Handle<Value> NodePowerCtl::TurnOn(const Arguments& args) {
 }
 
 
-Handle<Value> NodePowerCtl::TurnOff(const Arguments& args) {
+v8::Handle<v8::Value> NodePowerCtl::TurnOff(const v8::Arguments& args) {
   auto action = [](PowerCtl* p_pwr_ctl, int outlet) {
     p_pwr_ctl->TurnOff(outlet);
     return 0;
@@ -123,7 +123,7 @@ Handle<Value> NodePowerCtl::TurnOff(const Arguments& args) {
 }
 
 
-Handle<Value> NodePowerCtl::Toggle(const Arguments& args) {
+v8::Handle<v8::Value> NodePowerCtl::Toggle(const v8::Arguments& args) {
   auto action = [](PowerCtl* p_pwr_ctl, int outlet) {
     p_pwr_ctl->Toggle(outlet);
     return 0;
@@ -133,7 +133,7 @@ Handle<Value> NodePowerCtl::Toggle(const Arguments& args) {
 }
 
 
-Handle<Value> NodePowerCtl::IsOn(const Arguments& args) {
+v8::Handle<v8::Value> NodePowerCtl::IsOn(const v8::Arguments& args) {
   auto action = [](PowerCtl* p_pwr_ctl, int outlet) {
     return p_pwr_ctl->IsOn(outlet);
   };
@@ -142,7 +142,7 @@ Handle<Value> NodePowerCtl::IsOn(const Arguments& args) {
 }
 
 
-Handle<Value> NodePowerCtl::IsOff(const Arguments& args) {
+v8::Handle<v8::Value> NodePowerCtl::IsOff(const v8::Arguments& args) {
   auto action = [](PowerCtl* p_pwr_ctl, int outlet) {
     return p_pwr_ctl->IsOff(outlet);
   };

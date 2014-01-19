@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <libusb.h>
 
-#include "products.h"
-#include "scope_exit.h"
+#include "power_controller/products.h"
+#include "power_controller/scope_exit.h"
 
 //-----------------------------------------------------------------------------
 PowerCtl::PowerCtl(const products::PowerStrip& product)
