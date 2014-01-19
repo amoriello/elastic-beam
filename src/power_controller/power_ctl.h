@@ -9,13 +9,17 @@
 struct libusb_context;
 struct libusb_device;
 struct libusb_device_handle;
-struct PowerStrip;
+
+
+namespace products {
+  struct PowerStrip;
+}  // namespace products
 
 
 
 class PowerCtl {
  public:
-  explicit PowerCtl(const PowerStrip& product);
+  explicit PowerCtl(const products::PowerStrip& product);
 
   ~PowerCtl();
 
@@ -59,7 +63,7 @@ class PowerCtl {
   int UsbSendCommand(UsbMessage* p_message) const;
 
  private:
-  const PowerStrip& product_;
+  const products::PowerStrip& product_;
   libusb_context* p_ctx_ = nullptr;
   libusb_device_handle* p_hdev_ = nullptr;
 };

@@ -9,7 +9,7 @@
 #include "scope_exit.h"
 
 //-----------------------------------------------------------------------------
-PowerCtl::PowerCtl(const PowerStrip& product)
+PowerCtl::PowerCtl(const products::PowerStrip& product)
   : product_(product) { }
 
 

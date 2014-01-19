@@ -6,6 +6,7 @@
 
 #include <cstdint>
 
+namespace products {
 
 struct PowerStrip {
   uint16_t vendor_id;
@@ -17,8 +18,7 @@ struct PowerStrip {
   }
 };
 
-
-namespace products {
+/*
 static PowerStrip kSisPm{
   0x04b4,  // vendor_id
   0xfd11,  // product_id
@@ -36,6 +36,7 @@ static PowerStrip kMSisPmFlash {
   0xfd11,  // product_id
   1
 };
+*/
 
 static const PowerStrip kSisPmFlashNew {
   0x04b4,   // vendor_id
