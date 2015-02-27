@@ -1,26 +1,22 @@
-elastic-beam
-============
+#elastic-beam
+---------------------
 
-Power controller for Energenie powerstrip
-+++++++++++++++++++++++++++++++++++++++++
-
-This project could be build as a standalone binary application,
-or as a node.js addon (npm).
-
-Build on Linux (raspberry-pi).
-
-Uses libusb-1.0.* library
+###Power controller for Energenie powerstrip
 
 
-Thanks To :
-SiSpmCTL guys for the work,
-http://sispmctl.sourceforge.net/
+With this project, you can control this powerstrip with, for example : your RaspberryPi (command line tool + cron).
 
-nonolith / node-usb for the bindings.gyp file.
-https://github.com/nonolith/node-usb
+[Energenie Powerstrip](http://www.energenie.com/item.aspx?id=7415)
+![powerstrip](http://netwerkproducten.com/content/spanningssloffen/EG-PMS-LAN.jpg)
+
+--------------
+
+A Node.JS package is also available this project, making it easy to control your powerstrip using a nice Webapp [npm package](https://www.npmjs.com/package/elastic-beam).
+
+Just npm install it.
 
 
-Compatible products (yet... To be extended)
-  VendorId : ProductId
-   0x04b4  :  0xfd13
 
+#####Thanks To :
+- [SiSpmCTL](http://sispmctl.sourceforge.net/) guys for the work on your project, that helped me to prototype this quickly. Now, this project uses a more recent version of libusb.
+- [nonolith / node-usb](https://github.com/nonolith/node-usb) for the bindings.gyp build file.
