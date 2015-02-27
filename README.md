@@ -1,7 +1,7 @@
 #elastic-beam
 ---------------------
 
-###Power controller for Energenie powerstrip
+###Software controller for Energenie powerstrip
 
 
 With this project, you can control this powerstrip with, for example : your RaspberryPi (command line tool + cron).
