@@ -4,7 +4,7 @@
 ###Software controller for Energenie powerstrip
 
 
-With this project, you can control this powerstrip with, for example : your RaspberryPi (command line tool + cron).
+With this project, you can control this powerstrip with, for example : your RaspberryPi (command line tool + cron) and / or Node.Js ([npm package](https://www.npmjs.com/package/elastic-beam)).
 
 [Energenie Powerstrip](http://www.energenie.com/item.aspx?id=7415)
 ![powerstrip](http://netwerkproducten.com/content/spanningssloffen/EG-PMS-LAN.jpg)
